@@ -19,8 +19,6 @@ public class DBUtil {
         try {
             Properties ps = new Properties();
             InputStream is = DBUtil.class.getClassLoader().getResourceAsStream("db.properties");
-            System.out.println(DBUtil.class.getClassLoader());
-            System.out.println(is);
             ps.load(is);
             ds = DruidDataSourceFactory.createDataSource(ps);
         }catch (Exception e) {
