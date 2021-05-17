@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import org.example.model.Image;
+import org.example.util.DBUtil;
 import org.example.util.Util;
 
 import java.sql.*;
@@ -8,36 +9,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageDAO {
-    public static int queryCount(String md5) {
+
+
+    public static int queryCount(String md5) throws SQLException {
         Connection con = null;
-        PreparedStatement statement = null;
+        PreparedStatement st = null;
         ResultSet set = null;
         try {
-            // * 1. 获取Connection对象
-            con = Util.getConnection();
-            // * 2. 获取操作命令对象
-            String sql = "select count(0) as c from image_table where md5 = ?;";
-            statement = con.prepareStatement(sql);
-            statement.setString(1, md5);
-            // * 3. 执行sql语句
-            set = statement.executeQuery();
-            // * 4. 如果是查询语句要处理查询结果
+            //1.获取connection对象
+            con = DBUtil.getConnection();
+            //2. 获取statement对象
+            String sql = "select count(0) as c from image_table where md5 = ?";
+            st = con.prepareStatement(sql);
+            st.setString(1,md5);
+            //3.执行sql语句
+            set = st.executeQuery();
+            //4.处理查询结果
             set.next();
             return set.getInt("c");
         } catch (SQLException e) {
             throw new RuntimeException("查询图片md5失败" + md5);
-        } finally {
-            // * 5. 释放资源
-            Util.close(con,statement,set);
+        }finally {
+            //归还连接
+            DBUtil.close(st,con,set);
         }
     }
 
-    public static int insert(Image image){
+    public static int insert(Image image) throws SQLException {
         Connection con = null;
         PreparedStatement statement = null;
         try {
             // * 1. 获取Connection对象
-            con = Util.getConnection();
+            con = DBUtil.getConnection();
             // * 2. 获取操作命令对象
             String sql = "insert into image_table values(null,?,?,?,?,?,?)";
             statement = con.prepareStatement(sql);
@@ -54,7 +57,7 @@ public class ImageDAO {
             throw new RuntimeException("上传图片md5失败" + image.getMd5());
         } finally {
             // * 5. 释放资源
-            Util.close(con,statement);
+            DBUtil.close(statement,con);
         }
     }
 
@@ -65,7 +68,7 @@ public class ImageDAO {
         ResultSet set = null;
 
         try {
-            con = Util.getConnection();
+            con = DBUtil.getConnection();
             String sql = "select * from image_table";
             statement = con.prepareStatement(sql);
             set = statement.executeQuery();
@@ -94,7 +97,7 @@ public class ImageDAO {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            con = Util.getConnection();
+            con = DBUtil.getConnection();
             String sql = "select * from image_table where image_id=?";
 
             statement = con.prepareStatement(sql);
@@ -123,7 +126,7 @@ public class ImageDAO {
         PreparedStatement statement = null;
 
         try{
-            con = Util.getConnection();
+            con = DBUtil.getConnection();
             String sql = "delete from image_table where image_id = ?";
             statement = con.prepareStatement(sql);
             statement.setInt(1,id);
