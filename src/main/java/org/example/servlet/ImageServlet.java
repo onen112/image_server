@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,12 +40,28 @@ public class ImageServlet extends HttpServlet {
         resp.setContentType("application/json");
         //1. 获取请求数据
         try {
+            Object user = req.getSession().getAttribute("user");
+            Map<String,Object> map = null;
+            Integer id = null;
+            String uname = null;
+            if(user!=null){
+                map = (Map)user;
+                System.out.println(map);
+            }else{
+                System.out.println("未登录");
+            }
+
             Part p = req.getPart("uploadImage");
             String name = p.getSubmittedFileName();
             String contentType = p.getContentType();
             Date date = new Date();
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String uploadTime = df.format(date);
+            if(map != null){
+                uname = (String) map.get("username");
+                id = (Integer)map.get("userid");
+            }
+
             long size = p.getSize();
 
             InputStream inp = p.getInputStream();
@@ -53,9 +70,7 @@ public class ImageServlet extends HttpServlet {
 
             int num = ImageDAO.queryCount(md5);
             if(num >= 1){
-
                 throw new RuntimeException();
-
             }
             //2. 业务代码部分
             p.write(IMAGE_DIR+"/" + md5);
@@ -66,6 +81,7 @@ public class ImageServlet extends HttpServlet {
             image.setImageName(name);
             image.setSize(size);
             image.setPath("/" + md5);
+            image.setUserId(id);
             int i = ImageDAO.insert(image);
         }catch (Exception e){
             e.printStackTrace();

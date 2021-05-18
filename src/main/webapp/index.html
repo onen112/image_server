@@ -34,6 +34,9 @@
 </head>
 
 <body id="blog-article-sidebar">
+
+
+<div id="app">
     <div class="am-u-sm-12 am-u-sm-centered" style="background-color: rgb(39,44,49);padding-top: 5px;padding-bottom: 5px">
         <ul class="am-nav am-nav-pills am-u-sm-10 am-u-sm-centered">
             <li ><a href="#" class="on-active">首页</a></li>
@@ -41,7 +44,7 @@
             <li><a class="on-unactive" href="#">关于</a></li>
             <li  style="float: right" data-am-dropdown >
                 <a class="am-dropdown-toggle on-unactive" data-am-dropdown-toggle href="javascript:;">
-                    Onen404 <span class="am-icon-caret-down"></span>
+                    {{username}} <span class="am-icon-caret-down"></span>
                 </a>
                 <ul class="am-dropdown-content" >
                     <li class="am-dropdown-header">Header</li>
@@ -54,12 +57,7 @@
         </ul>
     </div>
 
-
-
-<hr>
-
-<div id="app">
-
+    <hr>
     <!-- nav start -->
     <nav class="am-g am-g-fixed blog-fixed blog-nav">
     <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button" data-am-collapse="{target: '#blog-collapse'}" ><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
@@ -117,10 +115,18 @@
         data: {
             images: [
             ],
-            uploadImage: ''
+            uploadImage: '',
+            username:"登录",
         },
         methods: {
             getImages() {
+                var str = location.href.split("?")[1];
+                if(str != undefined){
+                    str = str.split("=")[1];
+                    if(str != undefined){
+                        this.username = str;
+                    }
+                }
                 $.ajax({
                     url: "image",
                     type: "get",

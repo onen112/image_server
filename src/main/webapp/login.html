@@ -39,7 +39,7 @@
                         success:function (ret){
                             if(ret.state == 200){
                                 alert("登录成功！");
-                                location.href = "index.html"
+                                location.href = "index.html?user=" + ret.name;
                             }
                         }
                     })

@@ -17,4 +17,5 @@ public class Image {
     private String md5;
     private String contentType;
     private String path;
+    private Integer userId;
 }

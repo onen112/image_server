@@ -18,7 +18,6 @@ public class UserDAO {
             statement.setString(2,password);
             statement.setString(3,email);
             statement.setString(4,rigTime);
-            System.out.println(statement);
             return statement.executeUpdate();
         }catch (Exception e){
             throw new RuntimeException("注册出错" + e);
@@ -27,7 +26,7 @@ public class UserDAO {
         }
     }
 
-    public static boolean login(String username, String password) throws SQLException {
+    public static int login(String username, String password) throws SQLException {
         try{
             con = DBUtil.getConnection();
             String sql = "select * from user_table where user_name=? and user_password = ?";
@@ -35,7 +34,11 @@ public class UserDAO {
             statement.setString(1,username);
             statement.setString(2,password);
             set = statement.executeQuery();
-            return set.next();
+            if(set.next()){
+                return set.getInt("user_id");
+            }else{
+                return -1;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("查询登录信息失败" + e);

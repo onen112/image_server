@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageDAO {
-
-
     public static int queryCount(String md5) throws SQLException {
         Connection con = null;
         PreparedStatement st = null;
@@ -42,14 +40,15 @@ public class ImageDAO {
             // * 1. 获取Connection对象
             con = DBUtil.getConnection();
             // * 2. 获取操作命令对象
-            String sql = "insert into image_table values(null,?,?,?,?,?,?)";
+            String sql = "insert into image_table values(null,?,?,?,?,?,?,?)";
             statement = con.prepareStatement(sql);
-            statement.setString(1,image.getImageName());
-            statement.setLong(2,image.getSize());
-            statement.setString(3,image.getUploadTime());
-            statement.setString(4,image.getMd5());
-            statement.setString(5,image.getContentType());
-            statement.setString(6,image.getPath());
+            statement.setInt(1,image.getUserId());
+            statement.setString(2,image.getImageName());
+            statement.setLong(3,image.getSize());
+            statement.setString(4,image.getUploadTime());
+            statement.setString(5,image.getMd5());
+            statement.setString(6,image.getContentType());
+            statement.setString(7,image.getPath());
             // * 3. 执行sql语句
            return statement.executeUpdate();
 
@@ -120,11 +119,9 @@ public class ImageDAO {
             Util.close(con,statement);
         }
     }
-
     public static int delete(int id) {
         Connection con = null;
         PreparedStatement statement = null;
-
         try{
             con = DBUtil.getConnection();
             String sql = "delete from image_table where image_id = ?";
