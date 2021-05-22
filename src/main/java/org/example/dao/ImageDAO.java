@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import org.example.model.Image;
+import org.example.model.Image_ex;
 import org.example.util.DBUtil;
 import org.example.util.Util;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageDAO {
+    public static final String url_ = "http://localhost:8080/imageShow?imageId=";
     public static int queryCount(String md5) throws SQLException {
         Connection con = null;
         PreparedStatement st = null;
@@ -42,7 +44,12 @@ public class ImageDAO {
             // * 2. 获取操作命令对象
             String sql = "insert into image_table values(null,?,?,?,?,?,?,?)";
             statement = con.prepareStatement(sql);
-            statement.setInt(1,image.getUserId());
+            System.out.println(image.getUserId());
+            if(image.getUserId() != null){
+                statement.setInt(1,image.getUserId());
+            }else{
+                statement.setString(1,null);
+            }
             statement.setString(2,image.getImageName());
             statement.setLong(3,image.getSize());
             statement.setString(4,image.getUploadTime());
@@ -53,6 +60,7 @@ public class ImageDAO {
            return statement.executeUpdate();
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException("上传图片md5失败" + image.getMd5());
         } finally {
             // * 5. 释放资源
@@ -61,7 +69,7 @@ public class ImageDAO {
     }
 
 
-    public static List<Image> queryAll() {
+    public static List<Image_ex> queryAll() {
         Connection con = null;
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -71,10 +79,10 @@ public class ImageDAO {
             String sql = "select * from image_table";
             statement = con.prepareStatement(sql);
             set = statement.executeQuery();
-            List<Image> list = new ArrayList<>();
+            List<Image_ex> list = new ArrayList<>();
 
             while(set.next()){
-                Image image = new Image();
+                Image_ex image = new Image_ex();
                 image.setImageId(set.getInt("image_id"));
                 image.setUploadTime(set.getString("upload_time"));
                 image.setSize(set.getLong("size"));
@@ -82,8 +90,17 @@ public class ImageDAO {
                 image.setPath(set.getString("path"));
                 image.setImageName(set.getString("image_name"));
                 image.setContentType(set.getString("content_type"));
+                String[] str = new String[4];
+                str[0] = String.format(url_+"%d",image.getImageId());
+                str[1] = String.format("<img src='"+url_+"%d'>",image.getImageId());
+                str[2] = String.format("![]("+url_+"%d)",image.getImageId());
+                str[3] = String.format("[!["+url_+"%d]("+url_+"%d)]("+url_+"%d)",image.getImageId(),image.getImageId(),image.getImageId());
+                System.out.println(str);
+                image.setUrl(str);
+                System.out.println(image);
                 list.add(image);
             }
+            System.out.println(list);
             return list;
         }catch (SQLException e){
             throw new RuntimeException("查询所有图片出错",e);

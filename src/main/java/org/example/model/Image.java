@@ -18,4 +18,5 @@ public class Image {
     private String contentType;
     private String path;
     private Integer userId;
+
 }

@@ -42,12 +42,13 @@
             <li ><a href="#" class="on-active">首页</a></li>
             <li><a class="on-unactive" href="#">项目</a></li>
             <li><a class="on-unactive" href="#">关于</a></li>
-            <li  style="float: right" data-am-dropdown >
-                <a class="am-dropdown-toggle on-unactive" data-am-dropdown-toggle href="javascript:;">
+            <li style="float: right" v-show="username == '登录'"><a class="on-unactive" href="login.html">登录</a></li>
+            <li  v-if="username != '登录'" style="float: right" data-am-dropdown>
+                <a class="am-dropdown-toggle on-unactive" data-am-dropdown-toggle >
                     {{username}} <span class="am-icon-caret-down"></span>
                 </a>
                 <ul class="am-dropdown-content" >
-                    <li class="am-dropdown-header">Header</li>
+<!--                    <li class="am-dropdown-header">Header</li>-->
                     <li><a href="#">用户中心</a></li>
                     <li ><a href="#">图片管理</a></li>
                     <li class="am-divider"></li>
@@ -79,16 +80,37 @@
     <hr>
     <!-- content srart -->
     <div class="am-g am-g-fixed blog-fixed blog-content">
-        <figure data-am-widget="figure" class="am am-figure am-figure-default "   data-am-figure="{  pureview: 'true' }">
-            <div id="container">
-                <div v-for="image in images">
-                    <img v-bind:src="'imageShow?imageId=' + image.imageId" style="height:200px; width:200px">
-                    <h3 style="margin-left: auto; margin-right: auto;">{{image.imageName}}</h3>
+
+<!--           // <div id="container">-->
+                <div v-for="(image,index) in images">
+                    <div style="float: left;margin-right: 30px">
+                        <a v-bind:href="'imageShow?imageId=' + image.imageId">
+                        <img v-bind:src="'imageShow?imageId=' + image.imageId" style="height:200px; width:200px;" >
+                        <p style="text-align: center">{{image.imageName}}</p>
+                        </a>
+                    </div>
+
+                    <div style="float: left">
+                        <ul class="am-nav am-nav-tabs">
+                            <li v-on:click="change(index,0)" v-bind:class="[image.index==0?'am-active':'']"><a>图片（URL）链接</a></li>
+                            <li v-on:click="change(index,1)" v-bind:class="[image.index==1?'am-active':'']"><a>网页贴图代码（HTML）</a></li>
+                            <li v-on:click="change(index,2)" v-bind:class="[image.index==2?'am-active':'']"><a>Markdown代码</a></li>
+                            <li v-on:click="change(index,3)" v-bind:class="[image.index==3?'am-active':'']"><a>Markdown代码的图片地址</a></li>
+                        </ul>
+                        <input style="width: 100%;height: 30px;line-height: 50%;margin-top: 60px;margin-bottom: 20px" type="text" v-bind:value="image.url[image.index]" readonly="readonly">
+                    </div>
+
+                    <br>
+<!--                    <h5 style="margin-left: auto; margin-right: auto;display: inline-block"></h5>-->
+                    <br>
+
                     <button style="width:100%" class="am-btn am-btn-success" v-on:click.stop="remove(image.imageId)">删除</button>
+                    <hr>
                 </div>
-            </div>
-        </figure>
+<!--           // </div>-->
+
     </div>
+
 </div>
 <!-- content end -->
 <footer class="blog-footer">
@@ -108,8 +130,8 @@
 <script src="assets/js/pinto.min.js"></script>
 <script src="assets/js/img.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+
     var app = new Vue({
         el:'#app',
         data: {
@@ -117,22 +139,28 @@
             ],
             uploadImage: '',
             username:"登录",
+
+        },
+        created:function (){
+          var cookies = document.cookie.split(";");
+          console.log(cookies);
+          for(i = 0;i < cookies.length;i++){
+              var tmp = cookies[i].split("=");
+              console.log(tmp);
+              if(tmp[0] == "username"){
+                  this.username = tmp[1];
+              }
+          }
         },
         methods: {
             getImages() {
-                var str = location.href.split("?")[1];
-                if(str != undefined){
-                    str = str.split("=")[1];
-                    if(str != undefined){
-                        this.username = str;
-                    }
-                }
                 $.ajax({
                     url: "image",
                     type: "get",
                     context: this,
                     success: function(data, status) {
                         this.images = data;
+                        console.log(data)
                         $("#app").resize();
                     }
                 })
@@ -161,19 +189,23 @@
                 })
             },
             remove(imageId) {
-                $.ajax({
-                    url:"image?imageId=" + imageId,
-                    type:"delete",
-                    context: this,
-                    success: function(data, status) {
-                        app.getImages();
-                        alert("删除成功");
-                    }
-                })
+                if(confirm("确定要删除嘛？删除之后不可撤销！")) {
+                    $.ajax({
+                        url: "image?imageId=" + imageId,
+                        type: "delete",
+                        context: this,
+                        success: function (data, status) {
+                            app.getImages();
+                            alert("删除成功");
+                        }
+                    })
+                }
+            },
+            change(index, on){
+                this.images[index].index = on;
             }
         },
     });
-
     app.getImages();
 </script>
 </body>

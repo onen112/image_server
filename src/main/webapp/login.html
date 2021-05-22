@@ -12,7 +12,7 @@
             <input name="password" v-model="password" type="password" placeholder="密码">
             <p></p>
             <button v-on:click ="login">登录</button>
-            <button>注册账号</button>
+            <button onclick="javascript:(location.href='register.html')">注册账号</button>
         </form>
         <iframe id="iframe" name="iframe" style="display:none;"></iframe>
     </div>
@@ -23,7 +23,7 @@
         var app = new Vue({
             el:"#app",
             data:{
-                username:"123123",
+                username:"",
                 password:""
             },
             methods:{
@@ -38,8 +38,10 @@
                         dataType:"json",
                         success:function (ret){
                             if(ret.state == 200){
+                                console.log(ret);
                                 alert("登录成功！");
-                                location.href = "index.html?user=" + ret.name;
+
+                                location.href = "index.html?user=" + ret.user;
                             }
                         }
                     })

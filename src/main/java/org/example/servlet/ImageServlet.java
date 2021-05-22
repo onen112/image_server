@@ -1,17 +1,16 @@
 package org.example.servlet;
 
+import com.sun.javafx.binding.StringFormatter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.example.dao.ImageDAO;
 import org.example.model.Image;
+import org.example.model.Image_ex;
 import org.example.util.Util;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +30,7 @@ import java.util.Map;
 @MultipartConfig
 public class ImageServlet extends HttpServlet {
     public static final String IMAGE_DIR = "/Users/onen/Desktop/photo/";
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //设置请求和响应的数据编码
@@ -46,9 +46,8 @@ public class ImageServlet extends HttpServlet {
             String uname = null;
             if(user!=null){
                 map = (Map)user;
-                System.out.println(map);
             }else{
-                System.out.println("未登录");
+
             }
 
             Part p = req.getPart("uploadImage");
@@ -103,8 +102,17 @@ public class ImageServlet extends HttpServlet {
 
         if(id == null){
             //查询所有图片信息 o=List<Image>
-            List<Image> list = ImageDAO.queryAll();
+            List<Image_ex> list = ImageDAO.queryAll();
+            System.out.println(list);
             o = list;
+
+            if(req.getSession().getAttribute("user") == null){
+                Cookie cookie = new Cookie("username",null);
+                cookie.setMaxAge(0);
+                cookie.setPath("/");
+                resp.addCookie(cookie);
+                System.out.println("删除了");
+            }
         }else{
             //查询指定图片 o=image
             Image image = ImageDAO.queryOne(Integer.parseInt(id));

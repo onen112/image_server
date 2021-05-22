@@ -36,6 +36,8 @@ public class LoginServlet extends HttpServlet {
                 user.put("username",username);
                 user.put("userid",a);
                 session.setAttribute("user",user);
+                Cookie cookie = new Cookie("username", username);
+                resp.addCookie(cookie);
                 name = username;
             }else {
                 //不存在

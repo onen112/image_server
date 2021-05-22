@@ -32,5 +32,6 @@ public class ImageShowServlet extends HttpServlet {
         os.flush();
         fis.close();
         os.close();
+        resp.getWriter().println();
     }
 }
