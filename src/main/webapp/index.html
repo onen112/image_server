@@ -52,7 +52,7 @@
                     <li><a href="#">用户中心</a></li>
                     <li ><a href="#">图片管理</a></li>
                     <li class="am-divider"></li>
-                    <li><a href="#">退出登录</a></li>
+                    <li><a href="javascript:;" v-on:click="logout()">退出登录</a></li>
                 </ul>
             </li>
         </ul>
@@ -164,6 +164,17 @@
                         $("#app").resize();
                     }
                 })
+            },
+            logout(){
+              $.ajax({
+                  url:"logout",
+                  type:"get",
+                  context:this,
+                  success: function (data,status){
+                      alert("退出成功！");
+                      location.href = "index.html";
+                  }
+              })
             },
             changeImage(event){
                 app.uploadImage = event.target.files[0];
