@@ -1,6 +1,5 @@
 package org.example.servlet;
 
-import com.sun.javafx.binding.StringFormatter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.example.dao.ImageDAO;
 import org.example.model.Image;
@@ -49,7 +48,6 @@ public class ImageServlet extends HttpServlet {
             }else{
 
             }
-
             Part p = req.getPart("uploadImage");
             String name = p.getSubmittedFileName();
             String contentType = p.getContentType();
@@ -72,6 +70,7 @@ public class ImageServlet extends HttpServlet {
                 throw new RuntimeException();
             }
             //2. 业务代码部分
+
             p.write(IMAGE_DIR+"/" + md5);
             Image image = new Image();
             image.setContentType(contentType);

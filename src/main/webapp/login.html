@@ -17,43 +17,35 @@
     <link rel="stylesheet" href="assets/css/amazeui.min.css">
     <link rel="stylesheet" href="assets/css/app.css">
     <style>
-
+        body{
+            background-color: rgb(250,250,250);
+        }
         .main{
             -webkit-box-shadow:0px 3px 3px #c8c8c8 ;
             -moz-box-shadow:0px 3px 3px #c8c8c8 ;
             box-shadow:0px 3px 3px #c8c8c8 ;
             border-radius: 2%;
+            background-color: #fff;
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <form target="iframe">
-            <input name="username" v-model="username" type="text" placeholder="用户名" >
-            <p></p>
-            <input name="password" v-model="password" type="password" placeholder="密码">
-            <p></p>
-            <button v-on:click ="login">登录</button>
-            <button onclick="javascript:(location.href='register.html')">注册账号</button>
-        </form>
-        <iframe id="iframe" name="iframe" style="display:none;"></iframe>
+
+    <div id="app" class="main am-u-sm-centered" style="width: 450px;background-color: #fff;margin-top: 150px;padding: 60px 70px">
+        <h2 style="text-align: center">登录</h2>
+        <div class="am-input-group">
+            <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
+            <input name="username" v-model="username" type="text" class="am-form-field" placeholder="用户名">
+        </div>
+        <p></p>
+        <div class="am-input-group" style="margin-bottom: 30px">
+            <span class="am-input-group-label"><i class="am-icon-lock am-icon-fw"></i></span>
+            <input  name="password" v-model="password" type="password" class="am-form-field" placeholder="密码">
+        </div>
+
+        <button v-on:click ="login" style="background-color: #0f9fdb;color: #fff;font-weight: 700;text-align: left; margin-right: 30px" type="button" class="am-btn am-btn-default am-round">登录</button>
+        <span>没有账号？去 <a style="color: #0f9fdb" href="register.html"><u>注册</u></a></span>
     </div>
-
-<!--    <div class="main am-u-sm-4 am-u-sm-centered" style="background-color: #fff;margin-top: 150px;padding: 60px 70px">-->
-<!--        <h2 style="text-align: center">登录</h2>-->
-<!--        <div class="am-input-group">-->
-<!--            <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>-->
-<!--            <input type="text" class="am-form-field" placeholder="Username">-->
-<!--        </div>-->
-<!--        <p></p>-->
-<!--        <div class="am-input-group">-->
-<!--            <span class="am-input-group-label"><i class="am-icon-lock am-icon-fw"></i></span>-->
-<!--            <input type="text" class="am-form-field" placeholder="Password">-->
-<!--        </div>-->
-
-<!--        <button style="text-align: left; margin-top: 20px" type="button" class="am-btn am-btn-default am-round">默认样式</button>-->
-<!--        <button style="text-align: right; margin-top: 20px" type="button" class="am-btn am-btn-default am-round">默认样式</button>-->
-<!--    </div>-->
 
 
 
@@ -92,6 +84,7 @@
                             if(ret.state == 200){
                                 console.log(ret);
                                 alert("登录成功！");
+                                location.href="index.html"
                             }
                         }
                     })
