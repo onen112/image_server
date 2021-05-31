@@ -26,7 +26,6 @@ public class Util {
         try {
             return M.writeValueAsString(o);
         } catch (JsonProcessingException e) {
-            //
             throw new RuntimeException("序列化java对象失败"+o,e);
         }
     }

@@ -28,7 +28,7 @@ import java.util.Map;
 @WebServlet("/image")
 @MultipartConfig
 public class ImageServlet extends HttpServlet {
-    public static final String IMAGE_DIR = "/Users/onen/Desktop/photo/";
+    public static final String IMAGE_DIR = "/Users/onen/Desktop/photo";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -58,27 +58,27 @@ public class ImageServlet extends HttpServlet {
                 uname = (String) map.get("username");
                 id = (Integer)map.get("userid");
             }
-
             long size = p.getSize();
-
             InputStream inp = p.getInputStream();
-
             String md5 = DigestUtils.md5Hex(inp);
-
             int num = ImageDAO.queryCount(md5);
             if(num >= 1){
                 throw new RuntimeException();
             }
             //2. 业务代码部分
-
-            p.write(IMAGE_DIR+"/" + md5);
             Image image = new Image();
+            if(map  != null){
+                p.write(IMAGE_DIR+"/" + map.get("username") + "/" + md5);
+                image.setPath("/" + map.get("username") + "/" + md5);
+            }else{
+                p.write(IMAGE_DIR+"/" + md5);
+                image.setPath("/" + md5);
+            }
             image.setContentType(contentType);
             image.setMd5(md5);
             image.setUploadTime(uploadTime);
             image.setImageName(name);
             image.setSize(size);
-            image.setPath("/" + md5);
             image.setUserId(id);
             int i = ImageDAO.insert(image);
         }catch (Exception e){

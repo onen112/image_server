@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json");
         String msg = "";
-        int state = -1;
+        int state = 101;
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         String name = null;
